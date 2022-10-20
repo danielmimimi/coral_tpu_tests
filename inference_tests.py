@@ -12,7 +12,7 @@ import time
 from tflite_runtime.interpreter import load_delegate
 from tflite_runtime.interpreter import Interpreter
 
-model_nr = 1
+model_nr = 3
 
 script_dir = pathlib.Path(__file__).parent.absolute()
 if model_nr == 0 :
@@ -25,6 +25,8 @@ elif model_nr == 1:
     interpreter.allocate_tensors()
 elif model_nr == 2:
     model_file = os.path.join(script_dir, 'models/openvino_model_full_integer_quant_edgetpu.tflite')
+elif model_nr == 3:
+    model_file = os.path.join(script_dir, 'models/quant_coco-tiny-v3-relu_edgetpu.tflite')
 else :
     model_file = os.path.join(script_dir, 'models/mobilenet_v2_1.0_224_quant_edgetpu.tflite')
 
@@ -37,14 +39,12 @@ label_file = os.path.join(script_dir, 'imagenet_labels.txt')
 image_file = os.path.join(script_dir, 'images/persons.bmp')
 
 
-
-
 # Resize the image
 size = common.input_size(interpreter)
 image = Image.open(image_file).convert('RGB').resize(size, Image.ANTIALIAS)
 
 # Run an inference
-amount_of_inferences = 100
+amount_of_inferences = 1000
 start_time = time.time()
 for i in range(amount_of_inferences) :
     common.set_input(interpreter, image)
